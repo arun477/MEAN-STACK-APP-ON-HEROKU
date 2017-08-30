@@ -1,62 +1,62 @@
 "use strict";
 
-let express = require("express");
+let express = require('express');
 let app = express();
-
 let mongoUtil = require('./mongoUtil');
+let bodyParser = require('body-parser');
+let jsonParser = bodyParser.json();
 mongoUtil.connect();
 
-app.use( express.static(__dirname + "/../client") );
+app.use(express.static(__dirname + '/../client'));
 
-let bodyParser = require("body-parser");
-let jsonParser = bodyParser.json();
-
-app.get("/sports", (request, response) => {
-  let sports = mongoUtil.sports();
-  sports.find().toArray((err,docs) => {
-    if(err) {
-      response.sendStatus(400);
-    }
-    console.log(JSON.stringify(docs));
-    let sportNames = docs.map((sport) => sport.name);
-    response.json( sportNames );
-  });
-});
-
-app.get("/sports/:name", (request, response) => {
-  let sportName = request.params.name;
-
-  let sports = mongoUtil.sports();
-  sports.find({name: sportName}).limit(1).next((err,doc) => {
-    if(err) {
-      response.sendStatus(400);
-    }
-    console.log( "Sport doc: ", doc );
-    response.json(doc);
-  });
+app.get('/sports', (req,res)=>{
+   let sports = mongoUtil.sports();
+   sports.find().toArray((err,docs) => {
+       console.log(docs);
+       var sportNames = docs.map((sport) =>  sport.name);
+        res.json(sportNames);
+   });
 
 });
 
+app.get('/sports/:name', (req,res) => {
+    let sportName = req.params.name;
+    
+    let sportDetails = mongoUtil.sports();
+    sportDetails.find({name:sportName}).limit(1).next((err,docs) => {
+         if (err) {
+           res.sendStatus(400);
 
-app.post("/sports/:name/medals", jsonParser, (request, response) => {
-  let sportName = request.params.name;
-  let newMedal = request.body.medal || {};
+         }
+           console.log('Sport doc is : '+ docs);
+           res.json(docs);
+    });
 
-  if(!newMedal.division || !newMedal.year || !newMedal.country){
-    response.sendStatus(400);
-  }
+   })
 
-  let sports = mongoUtil.sports();
-  let query = {name: sportName};
-  let update = {$push: {goldMedals: newMedal}};
+   app.post('/sports/:name/medals', jsonParser, (req, res) => {
+     let sportName = req.params.name;
+     let newMedal = req.body.medal || {};
 
-  sports.findOneAndUpdate(query, update, (err, res) => {
-    if(err){
-      response.sendStatus(400);
+    if(!newMedal.division || !newMedal.year || !newMedal.country){
+      res.sendStatus(400);
     }
-    response.sendStatus(201);
-  });
-});
 
+     let sports = mongoUtil.sports();
+     let query = {name:sportName};
+     let update = {$push: {goldMedals:newMedal}};
 
-app.listen(8181, () => console.log( "Listening on 8181" ));
+     sports.findOneAndUpdate(query, update, (err, docs) => {
+       if (err){
+         res.sendStatus(400);
+       }
+        res.sendStatus(201);
+     })
+
+     console.log('Sport Name : ' + sportName);
+     console.log('New Medal : ' + newMedal);
+
+     
+   })
+
+app.listen(8181,()=>console.log('Server Listening On Port 8181'));

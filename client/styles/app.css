@@ -135,6 +135,11 @@ a {
   width: 200px;
 }
 
+.card-link--running::after {
+  background-image: url('../images/icon-running.svg');
+  width: 200px;
+}
+
 .card-link:active,
 .card-link:focus,
 .card-link:hover {
