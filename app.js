@@ -59,4 +59,5 @@ app.get('/sports/:name', (req,res) => {
      
    })
 
-app.listen(8181,()=>console.log('Server Listening On Port 8181'));
+let port = process.env.PORT || 8181
+app.listen(port,()=>console.log(`Server is listening on the port ${port}`));
