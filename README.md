@@ -20,6 +20,6 @@ Technology used
 > This app is a code-schooL MEAN-STACK project.
 
 ## Live Site link
-(https://cool-games.herokuapp.com)
+  <a href="https://cool-games.herokuapp.com"></a>
 
 *this app is hosted on heroku cloud platform*
