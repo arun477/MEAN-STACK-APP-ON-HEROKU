@@ -2,12 +2,12 @@
 
 let express = require('express');
 let app = express();
-let mongoUtil = require('./mongoUtil');
+let mongoUtil = require('./server/mongoUtil');
 let bodyParser = require('body-parser');
 let jsonParser = bodyParser.json();
 mongoUtil.connect();
 
-app.use(express.static(__dirname + '/../client'));
+app.use(express.static(__dirname + '/client'));
 
 app.get('/sports', (req,res)=>{
    let sports = mongoUtil.sports();

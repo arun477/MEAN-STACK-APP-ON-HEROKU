@@ -6,7 +6,7 @@ let _db;
 
 module.exports = {
     connect() {
-        client.connect('mongodb://localhost:27017/olympics-dev', (err,db) => {
+        client.connect('mongodb://cool:buddy@ds111204.mlab.com:11204/olympics-dev', (err,db) => {
              if(err){
                  console.log('Error occured while connecting to the mongodb server');
                  process.exit(1);
